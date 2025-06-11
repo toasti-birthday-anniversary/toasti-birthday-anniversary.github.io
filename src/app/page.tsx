@@ -2,14 +2,8 @@ import Image from "next/image"
 
 export default function Home() {
   return (
-    <div
-      className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20"
-      data-oid="7ielaru"
-    >
-      <main
-        className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start"
-        data-oid="ze7np0c"
-      >
+    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
+      <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
         <Image
           className="dark:invert"
           src="/next.svg"
@@ -17,38 +11,27 @@ export default function Home() {
           width={180}
           height={38}
           priority
-          data-oid="j_683fi"
         />
 
-        <ol
-          className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm/6 sm:text-left"
-          data-oid="9.v57-y"
-        >
-          <li className="mb-2 tracking-[-.01em]" data-oid="idfzmqo">
+        <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm/6 sm:text-left">
+          <li className="mb-2 tracking-[-.01em]">
             Get started by editing{" "}
-            <code
-              className="rounded bg-black/[.05] px-1 py-0.5 font-[family-name:var(--font-geist-mono)] font-semibold dark:bg-white/[.06]"
-              data-oid="04rc06_"
-            >
+            <code className="rounded bg-black/[.05] px-1 py-0.5 font-[family-name:var(--font-geist-mono)] font-semibold dark:bg-white/[.06]">
               src/app/page.tsx
             </code>
             .
           </li>
-          <li className="tracking-[-.01em]" data-oid="off2sjc">
+          <li className="tracking-[-.01em]">
             Save and see your changes instantly.
           </li>
         </ol>
 
-        <div
-          className="flex flex-col items-center gap-4 sm:flex-row"
-          data-oid=":6ka-kt"
-        >
+        <div className="flex flex-col items-center gap-4 sm:flex-row">
           <a
             className="bg-foreground text-background flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent px-4 text-sm font-medium transition-colors hover:bg-[#383838] sm:h-12 sm:w-auto sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
-            data-oid="m.k2znf"
           >
             <Image
               className="dark:invert"
@@ -56,7 +39,6 @@ export default function Home() {
               alt="Vercel logomark"
               width={20}
               height={20}
-              data-oid="9p2y:vi"
             />
             Deploy now
           </a>
@@ -65,22 +47,17 @@ export default function Home() {
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
-            data-oid="kr:p8i-"
           >
             Read our docs
           </a>
         </div>
       </main>
-      <footer
-        className="row-start-3 flex flex-wrap items-center justify-center gap-[24px]"
-        data-oid="r.gi6oa"
-      >
+      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-[24px]">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
-          data-oid="j-__jjz"
         >
           <Image
             aria-hidden
@@ -88,7 +65,6 @@ export default function Home() {
             alt="File icon"
             width={16}
             height={16}
-            data-oid="dgy4wxc"
           />
           Learn
         </a>
@@ -97,7 +73,6 @@ export default function Home() {
           href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
-          data-oid="o9m6q70"
         >
           <Image
             aria-hidden
@@ -105,7 +80,6 @@ export default function Home() {
             alt="Window icon"
             width={16}
             height={16}
-            data-oid="cqvn5:z"
           />
           Examples
         </a>
@@ -114,7 +88,6 @@ export default function Home() {
           href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
-          data-oid=":3jdf1g"
         >
           <Image
             aria-hidden
@@ -122,7 +95,6 @@ export default function Home() {
             alt="Globe icon"
             width={16}
             height={16}
-            data-oid="3l__zgj"
           />
           Go to nextjs.org →
         </a>
