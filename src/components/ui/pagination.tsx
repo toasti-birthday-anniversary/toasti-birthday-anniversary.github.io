@@ -16,6 +16,7 @@ function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
       data-slot="pagination"
       className={cn("mx-auto flex w-full justify-center", className)}
       {...props}
+      data-oid="rr9kw-_"
     />
   )
 }
@@ -29,12 +30,13 @@ function PaginationContent({
       data-slot="pagination-content"
       className={cn("flex flex-row items-center gap-1", className)}
       {...props}
+      data-oid="p2bx5q_"
     />
   )
 }
 
 function PaginationItem({ ...props }: React.ComponentProps<"li">) {
-  return <li data-slot="pagination-item" {...props} />
+  return <li data-slot="pagination-item" {...props} data-oid="z7l7ce7" />
 }
 
 type PaginationLinkProps = {
@@ -61,6 +63,7 @@ function PaginationLink({
         className,
       )}
       {...props}
+      data-oid="t.i3zqz"
     />
   )
 }
@@ -75,9 +78,12 @@ function PaginationPrevious({
       size="default"
       className={cn("gap-1 px-2.5 sm:pl-2.5", className)}
       {...props}
+      data-oid="ggyz10f"
     >
-      <ChevronLeftIcon />
-      <span className="hidden sm:block">Previous</span>
+      <ChevronLeftIcon data-oid="vsh_uha" />
+      <span className="hidden sm:block" data-oid="f.cb-b3">
+        Previous
+      </span>
     </PaginationLink>
   )
 }
@@ -92,9 +98,12 @@ function PaginationNext({
       size="default"
       className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
       {...props}
+      data-oid="-uljx:1"
     >
-      <span className="hidden sm:block">Next</span>
-      <ChevronRightIcon />
+      <span className="hidden sm:block" data-oid="pxn-kck">
+        Next
+      </span>
+      <ChevronRightIcon data-oid="-g9egc1" />
     </PaginationLink>
   )
 }
@@ -109,9 +118,12 @@ function PaginationEllipsis({
       data-slot="pagination-ellipsis"
       className={cn("flex size-9 items-center justify-center", className)}
       {...props}
+      data-oid="inhrbq:"
     >
-      <MoreHorizontalIcon className="size-4" />
-      <span className="sr-only">More pages</span>
+      <MoreHorizontalIcon className="size-4" data-oid="ea4pylt" />
+      <span className="sr-only" data-oid="ihbvic0">
+        More pages
+      </span>
     </span>
   )
 }

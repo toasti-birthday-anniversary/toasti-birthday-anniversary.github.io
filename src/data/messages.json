@@ -1,0 +1,44 @@
+{
+  "conversations": [
+    {
+      "id": "1",
+      "user": {
+        "name": "小明",
+        "username": "xiaoming"
+      },
+      "lastMessage": "生日聚會的地點確定了嗎？",
+      "timestamp": "2小時前",
+      "unread": true
+    },
+    {
+      "id": "2",
+      "user": {
+        "name": "美美",
+        "username": "meimei"
+      },
+      "lastMessage": "謝謝你的生日祝福！",
+      "timestamp": "5小時前",
+      "unread": false
+    },
+    {
+      "id": "3",
+      "user": {
+        "name": "阿華",
+        "username": "ahua"
+      },
+      "lastMessage": "週年慶活動的照片已經上傳了",
+      "timestamp": "1天前",
+      "unread": false
+    },
+    {
+      "id": "4",
+      "user": {
+        "name": "小花",
+        "username": "xiaohua"
+      },
+      "lastMessage": "記得明天是我們的第一次約會紀念日唷！",
+      "timestamp": "2天前",
+      "unread": true
+    }
+  ]
+}

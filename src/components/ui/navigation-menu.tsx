@@ -22,9 +22,10 @@ function NavigationMenu({
         className,
       )}
       {...props}
+      data-oid="ty5kmpf"
     >
       {children}
-      {viewport && <NavigationMenuViewport />}
+      {viewport && <NavigationMenuViewport data-oid="xq.kt1d" />}
     </NavigationMenuPrimitive.Root>
   )
 }
@@ -41,6 +42,7 @@ function NavigationMenuList({
         className,
       )}
       {...props}
+      data-oid="npkto0x"
     />
   )
 }
@@ -54,6 +56,7 @@ function NavigationMenuItem({
       data-slot="navigation-menu-item"
       className={cn("relative", className)}
       {...props}
+      data-oid="t8o67lb"
     />
   )
 }
@@ -72,11 +75,13 @@ function NavigationMenuTrigger({
       data-slot="navigation-menu-trigger"
       className={cn(navigationMenuTriggerStyle(), "group", className)}
       {...props}
+      data-oid="-vlbk9c"
     >
       {children}{" "}
       <ChevronDownIcon
         className="relative top-[1px] ml-1 size-3 transition duration-300 group-data-[state=open]:rotate-180"
         aria-hidden="true"
+        data-oid="ilj:4vv"
       />
     </NavigationMenuPrimitive.Trigger>
   )
@@ -95,6 +100,7 @@ function NavigationMenuContent({
         className,
       )}
       {...props}
+      data-oid="7p5cg:e"
     />
   )
 }
@@ -108,6 +114,7 @@ function NavigationMenuViewport({
       className={cn(
         "absolute top-full left-0 isolate z-50 flex justify-center",
       )}
+      data-oid="td70s::"
     >
       <NavigationMenuPrimitive.Viewport
         data-slot="navigation-menu-viewport"
@@ -116,6 +123,7 @@ function NavigationMenuViewport({
           className,
         )}
         {...props}
+        data-oid="giz:.3m"
       />
     </div>
   )
@@ -133,6 +141,7 @@ function NavigationMenuLink({
         className,
       )}
       {...props}
+      data-oid=":.ai3z4"
     />
   )
 }
@@ -149,8 +158,12 @@ function NavigationMenuIndicator({
         className,
       )}
       {...props}
+      data-oid="kyj1:n."
     >
-      <div className="bg-border relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm shadow-md" />
+      <div
+        className="bg-border relative top-[60%] h-2 w-2 rotate-45 rounded-tl-sm shadow-md"
+        data-oid="z:-xj-x"
+      />
     </NavigationMenuPrimitive.Indicator>
   )
 }

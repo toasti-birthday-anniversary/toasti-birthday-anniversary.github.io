@@ -1,0 +1,27 @@
+{
+  "currentUser": {
+    "name": "使用者名稱",
+    "username": "toasti_owo",
+    "bio": "記錄生活中每個值得慶祝的時刻 🎉 生日提醒 | 週年紀念 | 特別日子",
+    "location": "台灣",
+    "joinDate": "2023年1月",
+    "following": 128,
+    "followers": 256,
+    "tweets": 42
+  },
+  "tabs": [
+    {
+      "id": "tweets",
+      "label": "貼文",
+      "count": 42
+    },
+    {
+      "id": "media",
+      "label": "媒體"
+    },
+    {
+      "id": "likes",
+      "label": "喜歡"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "notifications": [
+    {
+      "id": "1",
+      "type": "birthday",
+      "user": {
+        "name": "小明",
+        "username": "xiaoming"
+      },
+      "timestamp": "1小時前",
+      "isRead": false
+    },
+    {
+      "id": "2",
+      "type": "like",
+      "user": {
+        "name": "美美",
+        "username": "meimei"
+      },
+      "content": "和男朋友交往三週年紀念日 💕",
+      "timestamp": "2小時前",
+      "isRead": false
+    },
+    {
+      "id": "3",
+      "type": "follow",
+      "user": {
+        "name": "阿華",
+        "username": "ahua"
+      },
+      "timestamp": "3小時前",
+      "isRead": true
+    },
+    {
+      "id": "4",
+      "type": "retweet",
+      "user": {
+        "name": "小花",
+        "username": "xiaohua"
+      },
+      "content": "第一次養貓咪滿一年了！🐱",
+      "timestamp": "5小時前",
+      "isRead": true
+    }
+  ]
+}

@@ -14,6 +14,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         className,
       )}
       {...props}
+      data-oid="t5rkq8_"
     />
   )
 }

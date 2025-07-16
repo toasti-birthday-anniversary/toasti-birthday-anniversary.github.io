@@ -9,11 +9,13 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     <div
       data-slot="table-container"
       className="relative w-full overflow-x-auto"
+      data-oid="xl3_oab"
     >
       <table
         data-slot="table"
         className={cn("w-full caption-bottom text-sm", className)}
         {...props}
+        data-oid="c:w6op4"
       />
     </div>
   )
@@ -25,6 +27,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
       data-slot="table-header"
       className={cn("[&_tr]:border-b", className)}
       {...props}
+      data-oid="0wb:oj_"
     />
   )
 }
@@ -35,6 +38,7 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
       data-slot="table-body"
       className={cn("[&_tr:last-child]:border-0", className)}
       {...props}
+      data-oid="l3rm9oz"
     />
   )
 }
@@ -48,6 +52,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
         className,
       )}
       {...props}
+      data-oid="co69_4r"
     />
   )
 }
@@ -61,6 +66,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
         className,
       )}
       {...props}
+      data-oid="i.56c.o"
     />
   )
 }
@@ -74,6 +80,7 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
         className,
       )}
       {...props}
+      data-oid="qd5awpe"
     />
   )
 }
@@ -87,6 +94,7 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
         className,
       )}
       {...props}
+      data-oid="n75oj6q"
     />
   )
 }
@@ -100,6 +108,7 @@ function TableCaption({
       data-slot="table-caption"
       className={cn("text-muted-foreground mt-4 text-sm", className)}
       {...props}
+      data-oid="biphn__"
     />
   )
 }

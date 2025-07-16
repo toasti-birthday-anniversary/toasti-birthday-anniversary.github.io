@@ -25,6 +25,7 @@ function Command({
         className,
       )}
       {...props}
+      data-oid="3qt:9um"
     />
   )
 }
@@ -43,16 +44,20 @@ function CommandDialog({
   showCloseButton?: boolean
 }) {
   return (
-    <Dialog {...props}>
-      <DialogHeader className="sr-only">
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
+    <Dialog {...props} data-oid="l9rqh4a">
+      <DialogHeader className="sr-only" data-oid="6qxavol">
+        <DialogTitle data-oid="wrupuom">{title}</DialogTitle>
+        <DialogDescription data-oid="td43_vr">{description}</DialogDescription>
       </DialogHeader>
       <DialogContent
         className={cn("overflow-hidden p-0", className)}
         showCloseButton={showCloseButton}
+        data-oid="utfbg1n"
       >
-        <Command className="[&_[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5">
+        <Command
+          className="[&_[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
+          data-oid=".ckiwus"
+        >
           {children}
         </Command>
       </DialogContent>
@@ -68,8 +73,9 @@ function CommandInput({
     <div
       data-slot="command-input-wrapper"
       className="flex h-9 items-center gap-2 border-b px-3"
+      data-oid="4uxpxm9"
     >
-      <SearchIcon className="size-4 shrink-0 opacity-50" />
+      <SearchIcon className="size-4 shrink-0 opacity-50" data-oid="47-zybn" />
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
@@ -77,6 +83,7 @@ function CommandInput({
           className,
         )}
         {...props}
+        data-oid="vbt0h4c"
       />
     </div>
   )
@@ -94,6 +101,7 @@ function CommandList({
         className,
       )}
       {...props}
+      data-oid="7z:oavg"
     />
   )
 }
@@ -106,6 +114,7 @@ function CommandEmpty({
       data-slot="command-empty"
       className="py-6 text-center text-sm"
       {...props}
+      data-oid="556n8cv"
     />
   )
 }
@@ -122,6 +131,7 @@ function CommandGroup({
         className,
       )}
       {...props}
+      data-oid="akx:hb-"
     />
   )
 }
@@ -135,6 +145,7 @@ function CommandSeparator({
       data-slot="command-separator"
       className={cn("bg-border -mx-1 h-px", className)}
       {...props}
+      data-oid="26wi.lr"
     />
   )
 }
@@ -151,6 +162,7 @@ function CommandItem({
         className,
       )}
       {...props}
+      data-oid="c3u9nb2"
     />
   )
 }
@@ -167,6 +179,7 @@ function CommandShortcut({
         className,
       )}
       {...props}
+      data-oid="6kdm5t2"
     />
   )
 }

@@ -1,0 +1,130 @@
+{
+  "sections": [
+    {
+      "id": "account",
+      "title": "帳戶設定",
+      "icon": "👤",
+      "items": [
+        {
+          "id": "edit-profile",
+          "label": "編輯個人檔案",
+          "type": "button",
+          "action": "edit-profile"
+        },
+        {
+          "id": "privacy",
+          "label": "隱私設定",
+          "type": "button",
+          "action": "privacy"
+        },
+        {
+          "id": "security",
+          "label": "安全性",
+          "type": "button",
+          "action": "security"
+        }
+      ]
+    },
+    {
+      "id": "notifications",
+      "title": "通知設定",
+      "icon": "🔔",
+      "items": [
+        {
+          "id": "birthday-notifications",
+          "label": "生日提醒",
+          "type": "switch",
+          "defaultValue": true
+        },
+        {
+          "id": "anniversary-notifications",
+          "label": "週年紀念提醒",
+          "type": "switch",
+          "defaultValue": true
+        },
+        {
+          "id": "push-notifications",
+          "label": "推播通知",
+          "type": "switch",
+          "defaultValue": true
+        },
+        {
+          "id": "email-notifications",
+          "label": "電子郵件通知",
+          "type": "switch",
+          "defaultValue": false
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "title": "應用程式設定",
+      "icon": "⚙️",
+      "items": [
+        {
+          "id": "dark-mode",
+          "label": "深色模式",
+          "type": "switch",
+          "defaultValue": false
+        },
+        {
+          "id": "language",
+          "label": "語言設定",
+          "type": "button",
+          "action": "language"
+        },
+        {
+          "id": "timezone",
+          "label": "時區設定",
+          "type": "button",
+          "action": "timezone"
+        }
+      ]
+    },
+    {
+      "id": "support",
+      "title": "支援與說明",
+      "icon": "❓",
+      "items": [
+        {
+          "id": "help-center",
+          "label": "說明中心",
+          "type": "button",
+          "action": "help-center"
+        },
+        {
+          "id": "feedback",
+          "label": "意見回饋",
+          "type": "button",
+          "action": "feedback"
+        },
+        {
+          "id": "about",
+          "label": "關於 Toasti",
+          "type": "button",
+          "action": "about"
+        }
+      ]
+    },
+    {
+      "id": "danger",
+      "title": "危險操作",
+      "icon": "⚠️",
+      "variant": "danger",
+      "items": [
+        {
+          "id": "logout",
+          "label": "登出",
+          "type": "button",
+          "action": "logout"
+        },
+        {
+          "id": "delete-account",
+          "label": "刪除帳戶",
+          "type": "button",
+          "action": "delete-account"
+        }
+      ]
+    }
+  ]
+}

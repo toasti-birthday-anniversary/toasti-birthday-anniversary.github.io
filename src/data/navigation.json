@@ -1,0 +1,56 @@
+{
+  "navigationItems": [
+    {
+      "name": "首頁",
+      "iconName": "Home",
+      "href": "/"
+    },
+    {
+      "name": "探索",
+      "iconName": "Search",
+      "href": "/explore"
+    },
+    {
+      "name": "通知",
+      "iconName": "Bell",
+      "href": "/notifications"
+    },
+    {
+      "name": "訊息",
+      "iconName": "MessageCircle",
+      "href": "/messages"
+    },
+    {
+      "name": "個人檔案",
+      "iconName": "User",
+      "href": "/profile"
+    },
+    {
+      "name": "設定",
+      "iconName": "Settings",
+      "href": "/settings"
+    }
+  ],
+  "mobileNavigationItems": [
+    {
+      "name": "首頁",
+      "iconName": "Home",
+      "href": "/"
+    },
+    {
+      "name": "探索",
+      "iconName": "Search",
+      "href": "/explore"
+    },
+    {
+      "name": "通知",
+      "iconName": "Bell",
+      "href": "/notifications"
+    },
+    {
+      "name": "訊息",
+      "iconName": "MessageCircle",
+      "href": "/messages"
+    }
+  ]
+}

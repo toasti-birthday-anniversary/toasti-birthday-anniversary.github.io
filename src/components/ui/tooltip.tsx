@@ -14,6 +14,7 @@ function TooltipProvider({
       data-slot="tooltip-provider"
       delayDuration={delayDuration}
       {...props}
+      data-oid="xyhykf8"
     />
   )
 }
@@ -22,8 +23,12 @@ function Tooltip({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
   return (
-    <TooltipProvider>
-      <TooltipPrimitive.Root data-slot="tooltip" {...props} />
+    <TooltipProvider data-oid="nt8vsk4">
+      <TooltipPrimitive.Root
+        data-slot="tooltip"
+        {...props}
+        data-oid="5jmqp:6"
+      />
     </TooltipProvider>
   )
 }
@@ -31,7 +36,13 @@ function Tooltip({
 function TooltipTrigger({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
+  return (
+    <TooltipPrimitive.Trigger
+      data-slot="tooltip-trigger"
+      {...props}
+      data-oid="rk5-3am"
+    />
+  )
 }
 
 function TooltipContent({
@@ -41,7 +52,7 @@ function TooltipContent({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal data-oid="6jfrlf6">
       <TooltipPrimitive.Content
         data-slot="tooltip-content"
         sideOffset={sideOffset}
@@ -50,9 +61,13 @@ function TooltipContent({
           className,
         )}
         {...props}
+        data-oid="ylf95gj"
       >
         {children}
-        <TooltipPrimitive.Arrow className="bg-primary fill-primary z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]" />
+        <TooltipPrimitive.Arrow
+          className="bg-primary fill-primary z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]"
+          data-oid="xbvnglp"
+        />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   )
