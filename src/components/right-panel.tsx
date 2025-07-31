@@ -4,6 +4,7 @@ import { Input } from "~/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { Button } from "~/components/ui/button"
 import { trendingTopics, suggestedUsers } from "~/data/explore"
+import Image from "next/image"
 
 /**
  * Right panel component showing trending topics and suggestions
@@ -45,9 +46,13 @@ export function RightPanel() {
             {suggestedUsers.map((user, index) => (
               <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full">
-                    <span className="text-lg">{user.avatar}</span>
-                  </div>
+                  <Image
+                    src={user.avatar}
+                    alt={user.name}
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 rounded-full object-cover"
+                  />
                   <div>
                     <p className="text-sm font-medium">{user.name}</p>
                     <p className="text-muted-foreground text-xs">

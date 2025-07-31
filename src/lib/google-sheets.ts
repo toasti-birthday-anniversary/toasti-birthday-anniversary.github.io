@@ -36,7 +36,7 @@ function parseTimestamp(timestamp: string): string {
   try {
     // 如果是 Google Sheets 的日期格式
     const date = new Date(timestamp)
-    if (isNaN(date.getTime())) return "未知時間"
+    if (isNaN(date.getTime())) return ""
 
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
@@ -54,7 +54,7 @@ function parseTimestamp(timestamp: string): string {
     }
   } catch (error) {
     console.error("日期解析錯誤:", error)
-    return "未知時間"
+    return ""
   }
 }
 /**
@@ -82,11 +82,16 @@ function processMultipleMediaUrls(urls: string | null): {
   // 處理第一個檔案作為主要顯示
   const mainFile = processMediaUrl(urlList[0])
 
-  // 處理所有檔案
   const allFiles = urlList
     .map((url) => processMediaUrl(url))
     .filter((file) => file.url)
-    .map((file) => ({ url: file.url!, type: file.type }))
+    .map((file) => ({
+      url: file.url!,
+      type:
+        file.type === "video" && file.url?.endsWith(".mp4")
+          ? "video"
+          : file.type,
+    }))
 
   return {
     url: mainFile.url,
@@ -157,6 +162,126 @@ export async function fetchGoogleSheetsData(): Promise<Tweet[]> {
 }
 
 /**
+ * Check if this user should have replies
+ * Uses same logic as the tweet detail page
+ */
+function shouldHaveReplies(
+  author: { name: string; username: string },
+  tweetId: string,
+): number {
+  // Check by tweet ID first (if provided and matches)
+  if (tweetId === "32") {
+    return 6
+  }
+
+  // Check by various identifiers that are less likely to change
+  const targetIdentifiers = [
+    "罐頭", // Name contains
+  ]
+
+  const authorNameLower = author.name.toLowerCase()
+  const authorUsernameLower = author.username.toLowerCase()
+
+  const hasTargetIdentifier = targetIdentifiers.some(
+    (identifier) =>
+      authorNameLower.includes(identifier.toLowerCase()) ||
+      authorUsernameLower.includes(identifier.toLowerCase()),
+  )
+
+  return hasTargetIdentifier ? 6 : 0
+}
+
+/**
+ * Check if this user should have gift text in content
+ */
+function shouldHaveGiftText(
+  author: { name: string; username: string },
+  tweetId: string,
+): boolean {
+  // Check by tweet ID first (if provided and matches)
+  if (tweetId === "32") {
+    return true
+  }
+
+  // Check by various identifiers that are less likely to change
+  const targetIdentifiers = [
+    "罐頭", // Name contains
+  ]
+
+  const authorNameLower = author.name.toLowerCase()
+  const authorUsernameLower = author.username.toLowerCase()
+
+  return targetIdentifiers.some(
+    (identifier) =>
+      authorNameLower.includes(identifier.toLowerCase()) ||
+      authorUsernameLower.includes(identifier.toLowerCase()),
+  )
+}
+
+/**
+ * 解析 Google Sheets API 回應（用於詳情頁面，不包含禮物文字）
+ */
+function parseGoogleSheetsResponseForDetail(data: {
+  values?: string[][]
+}): Tweet[] {
+  if (!data.values || data.values.length < 2) {
+    console.warn("Google Sheets 資料為空或格式錯誤")
+    return []
+  }
+
+  const tweets: Tweet[] = []
+  const rows = data.values.slice(1) // 跳過標題行
+
+  rows.forEach((row: string[], index: number) => {
+    // 根據實際 msg.json 結構：A=時間戳記, B=名字, C=頭貼, D=訊息, E=禮物檔案
+    const [timestamp, name, avatar, message, giftFiles] = row
+
+    // 跳過空的訊息
+    if (!message) return
+
+    // 詳情頁面不添加禮物文字
+    const content = message
+
+    // 處理禮物檔案作為媒體（支援多個檔案）
+    const mediaInfo = processMultipleMediaUrls(giftFiles)
+
+    const tweet: Tweet = {
+      id: String(index + 1),
+      author: {
+        name: name || "匿名朋友",
+        username: generateUsername(name),
+        avatar: processAvatarUrl(avatar) || undefined,
+      },
+      content,
+      timestamp: parseTimestamp(timestamp),
+      likes: Math.floor(Math.random() * 50) + 1,
+      retweets: Math.floor(Math.random() * 10),
+      replies: shouldHaveReplies(
+        {
+          name: name || "匿名朋友",
+          username: generateUsername(name),
+        },
+        String(index + 1),
+      ),
+      isLiked: Math.random() > 0.7,
+      isRetweeted: Math.random() > 0.9,
+      media: mediaInfo.url
+        ? {
+            url: mediaInfo.url,
+            type: mediaInfo.type,
+            allFiles: mediaInfo.allFiles,
+          }
+        : undefined,
+    }
+
+    tweets.push(tweet)
+  })
+
+  // 按時間排序（最新的在前面）
+  return tweets.reverse()
+}
+
+/**
  * 解析 Google Sheets API 回應
  */
 function parseGoogleSheetsResponse(data: { values?: string[][] }): Tweet[] {
@@ -177,9 +302,14 @@ function parseGoogleSheetsResponse(data: { values?: string[][] }): Tweet[] {
 
     let content = message
 
-    // 處理禮物檔案（可能有多個，用逗號分隔）
-    if (giftFiles) {
-      content += "\n\n🎁 附贈禮物"
+    // 為特定使用者（罐頭）添加禮物文字
+    const author = {
+      name: name || "匿名朋友",
+      username: generateUsername(name),
+    }
+
+    if (shouldHaveGiftText(author, String(index + 1))) {
+      content += "\n\n🎁 附贈禮物在留言區"
     }
 
     // 處理禮物檔案作為媒體（支援多個檔案）
@@ -196,7 +326,13 @@ function parseGoogleSheetsResponse(data: { values?: string[][] }): Tweet[] {
       timestamp: parseTimestamp(timestamp),
       likes: Math.floor(Math.random() * 50) + 1,
       retweets: Math.floor(Math.random() * 10),
-      replies: Math.floor(Math.random() * 8),
+      replies: shouldHaveReplies(
+        {
+          name: name || "匿名朋友",
+          username: generateUsername(name),
+        },
+        String(index + 1),
+      ),
       isLiked: Math.random() > 0.7,
       isRetweeted: Math.random() > 0.9,
       media: mediaInfo.url
@@ -243,6 +379,46 @@ export async function getTweetsWithCache(): Promise<Tweet[]> {
     }
     // 否則回傳空陣列
     return []
+  }
+}
+
+/**
+ * 為詳情頁面獲取推文資料（不包含禮物文字）
+ */
+export async function getTweetsForDetailPage(): Promise<Tweet[]> {
+  const { SHEET_ID, API_KEY, RANGE } = GOOGLE_SHEETS_CONFIG
+
+  // 檢查是否為測試/佔位符配置
+  const isPlaceholderConfig =
+    !SHEET_ID ||
+    !API_KEY ||
+    SHEET_ID === "your_google_sheet_id_here" ||
+    API_KEY === "your_google_api_key_here" ||
+    SHEET_ID.includes("example") ||
+    API_KEY.includes("example")
+
+  if (isPlaceholderConfig) {
+    console.warn("Google Sheets 配置未完成或為測試配置，使用本地資料")
+    // 回傳本地備份資料
+    const { getTweets } = await import("../data/tweets")
+    return getTweets()
+  }
+
+  try {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${API_KEY}`
+    const response = await fetch(url)
+
+    if (!response.ok) {
+      throw new Error(`Google Sheets API 錯誤: ${response.status}`)
+    }
+
+    const data = await response.json()
+    return parseGoogleSheetsResponseForDetail(data)
+  } catch (error) {
+    console.error("讀取 Google Sheets 資料失敗:", error)
+    // 發生錯誤時使用本地備份資料
+    const { getTweets } = await import("../data/tweets")
+    return getTweets()
   }
 }
 

@@ -10,6 +10,7 @@ interface ImageLightboxProps {
   onClose: () => void
   imageUrl: string
   alt?: string
+  mediaType?: "image" | "video" // 新增媒體類型屬性
 }
 
 /**
@@ -21,6 +22,7 @@ export function ImageLightbox({
   onClose,
   imageUrl,
   alt = "圖片",
+  mediaType,
 }: ImageLightboxProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
 
@@ -51,7 +53,47 @@ export function ImageLightbox({
     }
   }, [isOpen, imageUrl])
 
+  // 檢查 imageUrl 的內容類型
+  useEffect(() => {
+    if (imageUrl) {
+      try {
+        const url = new URL(imageUrl)
+        if (url.origin !== window.location.origin) {
+          console.log("外部 URL:", imageUrl)
+          fetch(imageUrl, { method: "HEAD" })
+            .then((response) => {
+              console.log(
+                "外部資源內容類型:",
+                response.headers.get("content-type"),
+              )
+            })
+            .catch((error) => {
+              console.error("無法檢索外部資源:", error)
+            })
+        } else {
+          console.log("內部 URL:", imageUrl)
+        }
+      } catch (error) {
+        console.error("無效的 URL:", imageUrl, error)
+      }
+    }
+  }, [imageUrl])
+
+  const isVideo =
+    mediaType === "video" || // 優先使用 mediaType 判斷
+    (typeof imageUrl === "string" &&
+      imageUrl.trim().toLowerCase().endsWith(".mp4")) // 更嚴謹的影片判斷
+
   if (!isOpen) return null
+
+  if (!imageUrl || typeof imageUrl !== "string") {
+    console.error("無效的 imageUrl:", imageUrl)
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <p className="text-white">媒體資源無效，請檢查 URL。</p>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -76,15 +118,14 @@ export function ImageLightbox({
           variant="secondary"
           onClick={(e) => {
             e.stopPropagation()
-            // 創建一個隱藏的 a 標籤來觸發下載
             const link = document.createElement("a")
             link.href = imageUrl
-            link.download = `image-${Date.now()}`
+            link.download = `media-${Date.now()}`
             document.body.appendChild(link)
             link.click()
             document.body.removeChild(link)
           }}
-          title="下載圖片"
+          title="下載媒體"
         >
           <Download className="h-4 w-4" />
         </Button>
@@ -98,34 +139,39 @@ export function ImageLightbox({
         </Button>
       </div>
 
-      {/* 圖片容器 */}
+      {/* 媒體容器 */}
       <div
         className="relative max-h-[90vh] max-w-[90vw]"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 載入指示器 */}
-        {!imageLoaded && (
-          <div className="bg-muted flex h-96 w-96 items-center justify-center rounded-lg">
-            <div className="text-muted-foreground">載入中...</div>
-          </div>
+        {isVideo ? (
+          <video
+            src={imageUrl}
+            controls
+            autoPlay
+            playsInline
+            muted
+            loop
+            className="max-h-[90vh] max-w-[90vw] object-contain"
+            onError={() => console.error("Lightbox 影片載入失敗:", imageUrl)}
+          />
+        ) : (
+          <Image
+            src={imageUrl}
+            alt={alt}
+            width={1200}
+            height={800}
+            className={`max-h-[90vh] max-w-[90vw] object-contain transition-opacity ${
+              imageLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              console.error("Lightbox 圖片載入失敗:", imageUrl)
+              setImageLoaded(true) // 即使失敗也要顯示
+            }}
+            priority
+          />
         )}
-
-        {/* 主要圖片 */}
-        <Image
-          src={imageUrl}
-          alt={alt}
-          width={1200}
-          height={800}
-          className={`max-h-[90vh] max-w-[90vw] object-contain transition-opacity ${
-            imageLoaded ? "opacity-100" : "opacity-0"
-          }`}
-          onLoad={() => setImageLoaded(true)}
-          onError={() => {
-            console.error("Lightbox 圖片載入失敗:", imageUrl)
-            setImageLoaded(true) // 即使失敗也要顯示
-          }}
-          priority
-        />
       </div>
 
       {/* 底部信息 */}

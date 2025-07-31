@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar"
 import { Card } from "~/components/ui/card"
-import { MessageCircle, Repeat2, Heart, Share, RefreshCw } from "lucide-react"
+import { MessageCircle, Repeat2, Heart, Share } from "lucide-react"
 import { getTweetsWithCache } from "~/lib/google-sheets"
 import { MediaGrid } from "~/components/media-grid"
 import { processAvatarUrl } from "~/lib/media-utils"
@@ -115,44 +115,21 @@ function Tweet({
 export function TweetList() {
   const [tweets, setTweets] = useState<TweetType[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [isRefreshing, setIsRefreshing] = useState(false)
-  const [dataSource, setDataSource] = useState<"google" | "local">("local")
 
-  const loadTweets = async (forceRefresh = false) => {
+  const loadTweets = async () => {
     try {
-      if (forceRefresh) {
-        setIsRefreshing(true)
-      } else {
-        setIsLoading(true)
-      }
-
       const tweetsData = await getTweetsWithCache()
       setTweets(tweetsData)
-
-      // 檢查是否有 Google API 配置來判斷資料來源
-      const hasGoogleConfig =
-        process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID &&
-        process.env.NEXT_PUBLIC_GOOGLE_API_KEY &&
-        process.env.NEXT_PUBLIC_GOOGLE_SHEET_ID !==
-          "your_google_sheet_id_here" &&
-        process.env.NEXT_PUBLIC_GOOGLE_API_KEY !== "your_google_api_key_here"
-
-      setDataSource(hasGoogleConfig ? "google" : "local")
     } catch (error) {
       console.error("載入推文失敗:", error)
     } finally {
       setIsLoading(false)
-      setIsRefreshing(false)
     }
   }
 
   useEffect(() => {
     loadTweets()
   }, [])
-
-  const handleRefresh = () => {
-    loadTweets(true)
-  }
 
   if (isLoading) {
     return (
@@ -164,32 +141,6 @@ export function TweetList() {
 
   return (
     <div className="divide-border divide-y">
-      {/* 資料來源指示器 */}
-      <div className="bg-muted/30 text-muted-foreground flex items-center justify-between p-3 text-sm">
-        <div className="flex items-center space-x-2">
-          <span>
-            資料來源：
-            {dataSource === "google" ? "🌐 Google 表單（即時）" : "📁 本地備份"}
-          </span>
-        </div>
-        {dataSource === "google" && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="h-6 px-2"
-          >
-            <RefreshCw
-              className={`h-3 w-3 ${isRefreshing ? "animate-spin" : ""}`}
-            />
-            <span className="ml-1">
-              {isRefreshing ? "更新中..." : "重新整理"}
-            </span>
-          </Button>
-        )}
-      </div>
-
       {tweets.length === 0 ? (
         <div className="flex items-center justify-center py-8">
           <div className="text-muted-foreground">尚未有任何祝福訊息</div>
