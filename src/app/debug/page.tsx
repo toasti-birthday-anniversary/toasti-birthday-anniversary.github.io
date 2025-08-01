@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { getTweets } from "~/data/tweets"
 
 export default function DebugPage() {
@@ -24,9 +25,11 @@ export default function DebugPage() {
 
           {tweet.author.avatar && (
             <div className="mt-2">
-              <img
+              <Image
                 src={tweet.author.avatar}
                 alt="頭像"
+                width={64}
+                height={64}
                 className="h-16 w-16 rounded-full"
                 onError={(e) => {
                   console.error("頭像載入失敗:", tweet.author.avatar)
@@ -45,9 +48,11 @@ export default function DebugPage() {
               <div>
                 檔案 {index + 1}: {mediaUrl}
               </div>
-              <img
+              <Image
                 src={mediaUrl}
                 alt={`媒體 ${index + 1}`}
+                width={128}
+                height={128}
                 className="h-32 w-32 border object-cover"
                 onError={(e) => {
                   console.error("媒體載入失敗:", mediaUrl)
