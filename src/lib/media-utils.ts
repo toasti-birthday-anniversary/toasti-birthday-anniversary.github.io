@@ -1,106 +1,157 @@
 /**
- * Google Drive 媒體處理工具函數
+ * 媒體處理工具函數 (純前端版本)
  */
 
-/**
- * 處理 Google Drive 頭像 URL
- * 將不同格式的 Google Drive 連結轉換為可直接顯示的格式
- */
-export function processAvatarUrl(url: string | undefined): string | undefined {
-  if (!url || !url.includes("drive.google.com")) {
-    return url
-  }
-
-  try {
-    let fileId: string | undefined
-
-    // 格式1: https://drive.google.com/file/d/FILE_ID/view
-    const viewMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)\//)
-    if (viewMatch) {
-      fileId = viewMatch[1]
-    }
-
-    // 格式2: https://drive.google.com/open?id=FILE_ID
-    const openMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/)
-    if (openMatch) {
-      fileId = openMatch[1]
-    }
-
-    // 格式3: 已經是 uc 格式
-    const ucMatch = url.match(/uc\?.*id=([a-zA-Z0-9_-]+)/)
-    if (ucMatch) {
-      fileId = ucMatch[1]
-    }
-
-    if (fileId) {
-      // 嘗試使用 Google Drive 的 thumbnail API 作為 CDN
-      // 這個格式更可靠，不需要特殊權限設定
-      const processedUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w400-h400`
-      return processedUrl
-    }
-  } catch (error) {
-    console.error("頭像 URL 處理錯誤:", error)
-  }
-
-  return url
+export interface MediaFile {
+  url: string
+  type: "image" | "video" | "unknown"
 }
 
 /**
- * 處理 Google Drive 媒體 URL（圖片/影片）
- * 支援檔案上傳和一般分享連結
+ * 處理媒體 URL（向後相容 Google Drive，但主要用於本地檔案）
  */
 export function processMediaUrl(url: string | null): {
   url: string | null
   type: "image" | "video" | "unknown"
 } {
-  if (!url || !url.includes("drive.google.com")) {
-    return { url: null, type: "unknown" }
+  if (!url) return { url: null, type: "unknown" }
+
+  return {
+    url,
+    type: getMediaType(url),
+  }
+}
+
+/**
+ * 將字串陣列轉換為 MediaFile 陣列
+ */
+export function stringArrayToMediaFiles(
+  files: string[] | undefined | null,
+): MediaFile[] {
+  if (!files || !Array.isArray(files)) {
+    console.log("stringArrayToMediaFiles: files is not an array:", files)
+    return []
   }
 
+  console.log("stringArrayToMediaFiles: processing files:", files)
+
+  return files.map((url) => ({
+    url,
+    type: getMediaType(url),
+  }))
+}
+
+/**
+ * 根據檔案副檔名判斷媒體類型
+ */
+export function getMediaType(url: string): "image" | "video" | "unknown" {
+  const extension = url.toLowerCase().split(".").pop()
+
+  if (!extension) return "unknown"
+
+  if (["jpg", "jpeg", "png", "gif", "webp"].includes(extension)) {
+    return "image"
+  }
+
+  if (["mp4", "webm", "mov", "avi"].includes(extension)) {
+    return "video"
+  }
+
+  return "unknown"
+}
+
+/**
+ * 檢查媒體檔案是否存在 (純前端版本 - 直接嘗試載入)
+ * 注意：這個函數在純前端環境下無法真正檢查檔案存在性
+ * 建議在建構時期就處理好媒體檔案列表
+ */
+export async function checkMediaFileExists(
+  postId: string,
+  filename: string,
+): Promise<boolean> {
   try {
-    // 處理不同格式的 Google Drive 連結
-    let fileId: string | undefined
+    const response = await fetch(`/img/${postId}/${filename}`, {
+      method: "HEAD",
+    })
+    return response.ok
+  } catch {
+    return false
+  }
+}
 
-    // 格式1: https://drive.google.com/file/d/FILE_ID/view
-    const viewMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)\//)
-    if (viewMatch) {
-      fileId = viewMatch[1]
-    }
+/**
+ * 檢查頭像是否存在 (純前端版本)
+ */
+export async function checkAvatarExists(postId: string): Promise<boolean> {
+  return checkMediaFileExists(postId, "avatar.png")
+}
 
-    // 格式2: https://drive.google.com/open?id=FILE_ID
-    const openMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/)
-    if (openMatch) {
-      fileId = openMatch[1]
-    }
+/**
+ * 取得所有媒體檔案 (純前端版本 - 預定義列表)
+ * 這個函數現在返回預先知道的媒體檔案
+ * 實際使用時應該從 tweets.json 中取得 media 陣列
+ */
+export function getMediaFiles(postId: string): string[] {
+  // 對於純前端版本，我們直接返回空陣列
+  // 實際的媒體檔案應該已經在 tweets.json 中定義好了
+  console.warn(
+    `getMediaFiles(${postId}): 在純前端環境下，媒體檔案應該預先在 tweets.json 中定義`,
+  )
+  return []
+}
 
-    // 格式3: 已經是 uc 格式
-    const ucMatch = url.match(/uc\?.*id=([a-zA-Z0-9_-]+)/)
-    if (ucMatch) {
-      fileId = ucMatch[1]
-    }
+/**
+ * Split media files into chunks of maximum 4 files each
+ */
+export function splitMediaIntoChunks(
+  mediaFiles: string[],
+  maxPerChunk = 4,
+): string[][] {
+  const chunks: string[][] = []
 
-    if (fileId) {
-      // 使用 Google Drive thumbnail API 作為 CDN
-      const directUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w400-h400`
-
-      // 如果原 URL 包含檔案資訊，嘗試推斷類型
-      const isVideo =
-        url.includes("video") || url.match(/\.(mp4|avi|mov|wmv|flv|webm)$/i)
-      const isImage =
-        url.includes("image") ||
-        url.match(/\.(jpg|jpeg|png|gif|bmp|webp|svg)$/i)
-
-      const type: "image" | "video" | "unknown" = isVideo
-        ? "video"
-        : isImage
-          ? "image"
-          : "image" // 預設為圖片
-
-      return { url: directUrl, type }
-    }
-  } catch (error) {
-    console.error("媒體 URL 處理錯誤:", error)
+  for (let i = 0; i < mediaFiles.length; i += maxPerChunk) {
+    chunks.push(mediaFiles.slice(i, i + maxPerChunk))
   }
 
-  return { url: null, type: "unknown" }
+  return chunks
+}
+
+/**
+ * Generate replies data for additional media chunks
+ */
+export function generateMediaReplies(
+  postId: string,
+  author: { name: string; username: string },
+  mediaChunks: string[][],
+  baseTimestamp: string,
+): Array<{
+  id: string
+  author: { name: string; username: string }
+  content: string
+  timestamp: string
+  likes: number
+  media: string[]
+}> {
+  if (mediaChunks.length <= 1) {
+    return []
+  }
+
+  const replies = []
+
+  // Start from the second chunk (first chunk goes in main tweet)
+  for (let i = 1; i < mediaChunks.length; i++) {
+    replies.push({
+      id: `${postId}-reply-${i}`,
+      author: {
+        name: author.name,
+        username: author.username,
+      },
+      content: "", // Empty content for media-only replies
+      timestamp: baseTimestamp,
+      likes: Math.floor(Math.random() * 10), // Random likes for now
+      media: mediaChunks[i],
+    })
+  }
+
+  return replies
 }

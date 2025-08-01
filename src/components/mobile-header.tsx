@@ -15,15 +15,15 @@ export function MobileHeader() {
     switch (pathname) {
       case "/":
         return "首頁"
-      case "/explore":
+      case "/":
         return "探索"
-      case "/notifications":
+      case "/":
         return "通知"
-      case "/messages":
+      case "/":
         return "訊息"
-      case "/profile":
+      case "/":
         return "個人檔案"
-      case "/settings":
+      case "/":
         return "設定"
       default:
         return "Toasti"

@@ -4,9 +4,9 @@ import { Card } from "~/components/ui/card"
 import { Button } from "~/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
 import { MessageCircle, Repeat2, Heart, Share } from "lucide-react"
-import { getTweetsForDetailPage } from "~/lib/google-sheets"
+import { getTweets } from "~/data/tweets"
 import { MediaGrid } from "~/components/media-grid"
-import { processAvatarUrl } from "~/lib/media-utils"
+import { stringArrayToMediaFiles } from "~/lib/media-utils"
 import type { Tweet } from "~/data/tweets"
 import { TweetComposer } from "~/components/tweet-composer"
 
@@ -15,43 +15,11 @@ interface TweetPageProps {
 }
 
 /**
- * Check if replies should be shown for this specific user
- * Uses multiple criteria to identify the target user safely
- */
-function shouldShowRepliesForUser(
-  author: {
-    name: string
-    username: string
-  },
-  tweetId?: string,
-): boolean {
-  // Check by tweet ID first (if provided and matches)
-  if (tweetId === "32") {
-    return true
-  }
-
-  // Check by various identifiers that are less likely to change
-  const targetIdentifiers = [
-    "罐頭", // Name contains
-    // Add more identifiers as needed
-  ]
-
-  const authorNameLower = author.name.toLowerCase()
-  const authorUsernameLower = author.username.toLowerCase()
-
-  return targetIdentifiers.some(
-    (identifier) =>
-      authorNameLower.includes(identifier.toLowerCase()) ||
-      authorUsernameLower.includes(identifier.toLowerCase()),
-  )
-}
-
-/**
  * Generate static paths for all tweets
  */
 export async function generateStaticParams() {
   try {
-    const tweets = await getTweetsForDetailPage()
+    const tweets = getTweets()
     return tweets.map((tweet: Tweet) => ({
       id: tweet.id,
     }))
@@ -82,10 +50,7 @@ function TweetDetail({
         <div className="flex items-center space-x-3">
           <Avatar className="h-12 w-12">
             {author.avatar && (
-              <AvatarImage
-                src={processAvatarUrl(author.avatar)}
-                alt={`${author.name}的頭像`}
-              />
+              <AvatarImage src={author.avatar} alt={`${author.name}的頭像`} />
             )}
             <AvatarFallback className="text-lg">
               {author.name.charAt(0)}
@@ -101,11 +66,7 @@ function TweetDetail({
         <p className="text-lg leading-relaxed whitespace-pre-wrap">{content}</p>
 
         {/* 媒體顯示區域 - 使用 Twitter 風格網格 */}
-        {media && (
-          <MediaGrid
-            files={media.allFiles || [{ url: media.url, type: media.type }]}
-          />
-        )}
+        {media && <MediaGrid files={stringArrayToMediaFiles(media)} />}
 
         {/* Timestamp */}
         <div className="text-muted-foreground border-border border-b pb-4 text-sm">
@@ -158,7 +119,7 @@ function TweetDetail({
  */
 export default async function TweetPage({ params }: TweetPageProps) {
   const { id } = await params
-  const tweets = await getTweetsForDetailPage()
+  const tweets = getTweets()
   const tweet = tweets.find((t: Tweet) => t.id === id)
 
   if (!tweet) {
@@ -181,90 +142,87 @@ export default async function TweetPage({ params }: TweetPageProps) {
           <TweetComposer placeholder="推文你的回覆" />
         </div>
 
-        {/* Mock Replies - Show only for specific user */}
-        {shouldShowRepliesForUser(tweet.author, tweet.id) && (
+        {/* Replies - Use data from JSON */}
+        {tweet.repliesData && tweet.repliesData.length > 0 && (
           <div className="border-border divide-border divide-y border-t">
-            {/* 第一到第五留言，每組包含指定的圖片 */}
-            {[
-              ["00.png", "01.png", "02.png", "03.png"],
-              ["04.png", "05.png", "06.png", "07.png"],
-              ["08.png", "09.png", "10.png", "11.png"],
-              ["12.png", "13.png", "14.png", "15.png"],
-              ["16.png", "17.png", "18.png", "19.png"],
-            ].map((images, index) => (
-              <div key={index} className="p-4">
+            {tweet.repliesData.map((reply) => (
+              <div key={reply.id} className="p-4">
                 <div className="flex space-x-3">
                   <Avatar className="h-8 w-8">
-                    {tweet.author.avatar && (
+                    {reply.author.avatar && (
                       <AvatarImage
-                        src={processAvatarUrl(tweet.author.avatar)}
-                        alt={`${tweet.author.name}的頭像`}
+                        src={reply.author.avatar}
+                        alt={`${reply.author.name}的頭像`}
                       />
                     )}
                     <AvatarFallback>
-                      {tweet.author.name.charAt(0)}
+                      {reply.author.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium">{tweet.author.name}</span>
+                      <span className="font-medium">{reply.author.name}</span>
                       <span className="text-muted-foreground">
-                        @{tweet.author.username}
+                        @{reply.author.username}
                       </span>
                       <span className="text-muted-foreground">·</span>
                       <span className="text-muted-foreground text-sm">
-                        1小時
+                        {reply.timestamp}
                       </span>
                     </div>
 
-                    {/* 圖片網格 */}
-                    <div className="mt-3">
-                      <MediaGrid
-                        files={images.map((image) => ({
-                          url: `/img/${image}`,
-                          type: "image",
-                        }))}
-                      />
+                    {/* Reply content */}
+                    {reply.content && (
+                      <p className="mt-2 whitespace-pre-wrap">
+                        {reply.content}
+                      </p>
+                    )}
+
+                    {/* Reply media */}
+                    {reply.media && reply.media.length > 0 && (
+                      <div className="mt-3">
+                        <MediaGrid
+                          files={stringArrayToMediaFiles(reply.media)}
+                        />
+                      </div>
+                    )}
+
+                    {/* Reply actions */}
+                    <div className="text-muted-foreground mt-3 flex items-center space-x-6">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="hover:text-blue-500"
+                      >
+                        <MessageCircle className="mr-2 h-4 w-4" />0
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="hover:text-green-500"
+                      >
+                        <Repeat2 className="mr-2 h-4 w-4" />0
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="hover:text-red-500"
+                      >
+                        <Heart className="mr-2 h-4 w-4" />
+                        {reply.likes}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="hover:text-blue-500"
+                      >
+                        <Share className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
-
-            {/* 第六留言，包含兩張圖片 */}
-            <div className="p-4">
-              <div className="flex space-x-3">
-                <Avatar className="h-8 w-8">
-                  {tweet.author.avatar && (
-                    <AvatarImage
-                      src={processAvatarUrl(tweet.author.avatar)}
-                      alt={`${tweet.author.name}的頭像`}
-                    />
-                  )}
-                  <AvatarFallback>{tweet.author.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-medium">{tweet.author.name}</span>
-                    <span className="text-muted-foreground">
-                      @{tweet.author.username}
-                    </span>
-                    <span className="text-muted-foreground">·</span>
-                    <span className="text-muted-foreground text-sm">1小時</span>
-                  </div>
-
-                  {/* 圖片網格 */}
-                  <div className="mt-3">
-                    <MediaGrid
-                      files={[
-                        { url: "/img/20.png", type: "image" },
-                        { url: "/img/21.png", type: "image" },
-                      ]}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </div>

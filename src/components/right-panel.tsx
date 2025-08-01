@@ -56,12 +56,18 @@ export function RightPanel() {
                   <div>
                     <p className="text-sm font-medium">{user.name}</p>
                     <p className="text-muted-foreground text-xs">
-                      {user.username}
+                      @{user.username}
                     </p>
                   </div>
                 </div>
-                <Button size="sm" variant="outline">
-                  追蹤
+                <Button size="sm" variant="outline" asChild>
+                  <a
+                    href={`https://twitch.tv/${user.username}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    追蹤
+                  </a>
                 </Button>
               </div>
             ))}

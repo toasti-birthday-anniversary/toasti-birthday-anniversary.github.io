@@ -1,11 +1,29 @@
-import tweetsData from "./birthday-tweets.json"
+import tweetsData from "./tweets.json"
 
+/**
+ * Tweet author info
+ */
 export interface TweetAuthor {
   name: string
   username: string
-  avatar?: string
+  avatar?: string // 本地路徑
 }
 
+/**
+ * 留言（回覆）
+ */
+export interface TweetReply {
+  id: string
+  author: TweetAuthor
+  content: string
+  timestamp: string
+  likes: number
+  media?: string[] // 改為字串陣列
+}
+
+/**
+ * Tweet 結構
+ */
 export interface Tweet {
   id: string
   author: TweetAuthor
@@ -16,20 +34,22 @@ export interface Tweet {
   replies: number
   isLiked?: boolean
   isRetweeted?: boolean
-  media?: {
-    url: string
-    type: "image" | "video" | "unknown"
-    allFiles?: Array<{ url: string; type: "image" | "video" | "unknown" }>
-  }
+  media?: string[] // 改為字串陣列
+  repliesData?: TweetReply[] // 新增回覆資料欄位
 }
 
 /**
- * Get all tweets
- * @returns Array of all tweets
+ * 取得所有 tweets，資料已經預處理過了
+ * @returns 按 id 降序排列的 tweets（最新的在前面）
  */
 export function getTweets(): Tweet[] {
-  return tweetsData.tweets as Tweet[]
+  return tweetsData.tweets
+    .map((tweet) => ({
+      ...tweet,
+      // 直接使用 JSON 中的 author 資料，不要覆蓋
+    }))
+    .sort((a, b) => parseInt(b.id) - parseInt(a.id))
 }
 
-// Export data for backward compatibility
-export const sampleTweets: Tweet[] = tweetsData.tweets as Tweet[]
+// 舊 API 兼容
+export const sampleTweets: Tweet[] = getTweets()

@@ -58,49 +58,6 @@ function parseTimestamp(timestamp: string): string {
   }
 }
 /**
- * 處理多個 Google Drive 媒體 URL（支援逗號分隔）
- */
-function processMultipleMediaUrls(urls: string | null): {
-  url: string | null
-  type: "image" | "video" | "unknown"
-  allFiles?: Array<{ url: string; type: "image" | "video" | "unknown" }>
-} {
-  if (!urls) {
-    return { url: null, type: "unknown" }
-  }
-
-  // 分割多個連結
-  const urlList = urls
-    .split(",")
-    .map((url) => url.trim())
-    .filter(Boolean)
-
-  if (urlList.length === 0) {
-    return { url: null, type: "unknown" }
-  }
-
-  // 處理第一個檔案作為主要顯示
-  const mainFile = processMediaUrl(urlList[0])
-
-  const allFiles = urlList
-    .map((url) => processMediaUrl(url))
-    .filter((file) => file.url)
-    .map((file) => ({
-      url: file.url!,
-      type:
-        file.type === "video" && file.url?.endsWith(".mp4")
-          ? "video"
-          : file.type,
-    }))
-
-  return {
-    url: mainFile.url,
-    type: mainFile.type,
-    allFiles: allFiles.length > 1 ? allFiles : undefined,
-  }
-}
-
-/**
  * 處理 Google Drive 頭像 URL（向後相容）
  */
 function processAvatarUrl(url: string | null): string | null {
@@ -234,7 +191,7 @@ function parseGoogleSheetsResponseForDetail(data: {
 
   rows.forEach((row: string[], index: number) => {
     // 根據實際 msg.json 結構：A=時間戳記, B=名字, C=頭貼, D=訊息, E=禮物檔案
-    const [timestamp, name, avatar, message, giftFiles] = row
+    const [timestamp, name, avatar, message] = row
 
     // 跳過空的訊息
     if (!message) return
@@ -242,8 +199,7 @@ function parseGoogleSheetsResponseForDetail(data: {
     // 詳情頁面不添加禮物文字
     const content = message
 
-    // 處理禮物檔案作為媒體（支援多個檔案）
-    const mediaInfo = processMultipleMediaUrls(giftFiles)
+    // 不處理 Google Sheets 的媒體檔案，讓 organize-media.js 來處理本地檔案
 
     const tweet: Tweet = {
       id: String(index + 1),
@@ -265,13 +221,7 @@ function parseGoogleSheetsResponseForDetail(data: {
       ),
       isLiked: Math.random() > 0.7,
       isRetweeted: Math.random() > 0.9,
-      media: mediaInfo.url
-        ? {
-            url: mediaInfo.url,
-            type: mediaInfo.type,
-            allFiles: mediaInfo.allFiles,
-          }
-        : undefined,
+      media: undefined, // 不使用 Google Sheets 的媒體，讓 organize-media.js 來處理本地檔案
     }
 
     tweets.push(tweet)
@@ -295,7 +245,7 @@ function parseGoogleSheetsResponse(data: { values?: string[][] }): Tweet[] {
 
   rows.forEach((row: string[], index: number) => {
     // 根據實際 msg.json 結構：A=時間戳記, B=名字, C=頭貼, D=訊息, E=禮物檔案
-    const [timestamp, name, avatar, message, giftFiles] = row
+    const [timestamp, name, avatar, message] = row
 
     // 跳過空的訊息
     if (!message) return
@@ -312,8 +262,7 @@ function parseGoogleSheetsResponse(data: { values?: string[][] }): Tweet[] {
       content += "\n\n🎁 附贈禮物在留言區"
     }
 
-    // 處理禮物檔案作為媒體（支援多個檔案）
-    const mediaInfo = processMultipleMediaUrls(giftFiles)
+    // 不處理 Google Sheets 的媒體檔案，讓 organize-media.js 來處理本地檔案
 
     const tweet: Tweet = {
       id: String(index + 1),
@@ -335,13 +284,7 @@ function parseGoogleSheetsResponse(data: { values?: string[][] }): Tweet[] {
       ),
       isLiked: Math.random() > 0.7,
       isRetweeted: Math.random() > 0.9,
-      media: mediaInfo.url
-        ? {
-            url: mediaInfo.url,
-            type: mediaInfo.type,
-            allFiles: mediaInfo.allFiles,
-          }
-        : undefined,
+      media: undefined, // 不使用 Google Sheets 的媒體，讓 organize-media.js 來處理本地檔案
     }
 
     tweets.push(tweet)

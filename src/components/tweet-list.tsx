@@ -4,9 +4,9 @@ import { Button } from "~/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar"
 import { Card } from "~/components/ui/card"
 import { MessageCircle, Repeat2, Heart, Share } from "lucide-react"
-import { getTweetsWithCache } from "~/lib/google-sheets"
+import { getTweets } from "~/data/tweets"
 import { MediaGrid } from "~/components/media-grid"
-import { processAvatarUrl } from "~/lib/media-utils"
+import { stringArrayToMediaFiles } from "~/lib/media-utils"
 import type { Tweet as TweetType } from "~/data/tweets"
 
 /**
@@ -23,6 +23,7 @@ function Tweet({
   isLiked = false,
   isRetweeted = false,
   media,
+  repliesData,
 }: TweetType) {
   const router = useRouter()
 
@@ -42,10 +43,7 @@ function Tweet({
       <div className="flex space-x-3 p-3">
         <Avatar>
           {author.avatar && (
-            <AvatarImage
-              src={processAvatarUrl(author.avatar)}
-              alt={`${author.name}的頭像`}
-            />
+            <AvatarImage src={author.avatar} alt={`${author.name}的頭像`} />
           )}
           <AvatarFallback>{author.name.charAt(0)}</AvatarFallback>
         </Avatar>
@@ -60,11 +58,7 @@ function Tweet({
           <p className="whitespace-pre-wrap">{content}</p>
 
           {/* 媒體顯示區域 - 使用 Twitter 風格網格 */}
-          {media && (
-            <MediaGrid
-              files={media.allFiles || [{ url: media.url, type: media.type }]}
-            />
-          )}
+          {media && <MediaGrid files={stringArrayToMediaFiles(media)} />}
 
           <div className="text-muted-foreground flex items-center justify-between pt-2">
             <Button
@@ -103,6 +97,36 @@ function Tweet({
               <Share className="h-4 w-4" />
             </Button>
           </div>
+
+          {/* 回覆區域 */}
+          {repliesData && repliesData.length > 0 && (
+            <div className="border-border ml-8 space-y-3 border-l-2 pl-4">
+              {repliesData.map((reply) => (
+                <div key={reply.id} className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm font-semibold">
+                      {reply.author.name}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      @{reply.author.username}
+                    </span>
+                    <span className="text-muted-foreground text-xs">·</span>
+                    <span className="text-muted-foreground text-xs">
+                      {reply.timestamp}
+                    </span>
+                  </div>
+                  <p className="text-sm">{reply.content}</p>
+                  {reply.media && reply.media.length > 0 && (
+                    <MediaGrid files={stringArrayToMediaFiles(reply.media)} />
+                  )}
+                  <div className="text-muted-foreground text-xs">
+                    <Heart className="mr-1 inline h-3 w-3" />
+                    {reply.likes}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </Card>
@@ -118,7 +142,7 @@ export function TweetList() {
 
   const loadTweets = async () => {
     try {
-      const tweetsData = await getTweetsWithCache()
+      const tweetsData = getTweets()
       setTweets(tweetsData)
     } catch (error) {
       console.error("載入推文失敗:", error)
