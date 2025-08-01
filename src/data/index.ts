@@ -12,14 +12,8 @@ export * from "./explore"
 // Export all tweets data
 export * from "./tweets"
 
-// Export all notifications data
-export * from "./notifications"
-
 // Export all settings data
 export * from "./settings"
-
-// Export all messages data
-export * from "./messages"
 
 // Export all profile data
 export * from "./profile"

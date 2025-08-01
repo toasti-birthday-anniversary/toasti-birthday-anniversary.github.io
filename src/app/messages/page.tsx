@@ -5,7 +5,21 @@ import { Card, CardContent } from "~/components/ui/card"
 import { Avatar, AvatarFallback } from "~/components/ui/avatar"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
-import { getConversations, type MessageConversation } from "~/data/messages"
+
+interface User {
+  id: string
+  name: string
+  username: string
+  avatar?: string
+}
+
+interface MessageConversation {
+  id: string
+  user: User
+  lastMessage: string
+  timestamp: string
+  unread: boolean
+}
 
 /**
  * Individual message conversation component
@@ -49,7 +63,8 @@ function Conversation({
  * Messages page component
  */
 export default function Messages() {
-  const conversations = getConversations()
+  // Mock data - replace with actual data in the future
+  const conversations: MessageConversation[] = []
 
   return (
     <div className="flex min-h-dvh flex-col">

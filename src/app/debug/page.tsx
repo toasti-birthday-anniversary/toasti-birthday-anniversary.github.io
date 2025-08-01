@@ -1,3 +1,5 @@
+"use client"
+
 import { getTweets } from "~/data/tweets"
 
 export default function DebugPage() {

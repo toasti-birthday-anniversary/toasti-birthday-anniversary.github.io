@@ -12,10 +12,26 @@ import {
   Cake,
   Bell,
 } from "lucide-react"
-import {
-  getNotifications,
-  type Notification as NotificationType,
-} from "~/data/notifications"
+
+interface User {
+  id: string
+  name: string
+  username: string
+  avatar?: string
+}
+
+interface Notification {
+  id: string
+  type: "like" | "retweet" | "follow" | "mention" | "birthday" | "anniversary"
+  user: User
+  content?: string
+  tweet?: {
+    id: string
+    excerpt: string
+  }
+  timestamp: string
+  isRead: boolean
+}
 
 /**
  * Individual notification component
@@ -26,7 +42,7 @@ function Notification({
   content,
   timestamp,
   isRead = false,
-}: NotificationType) {
+}: Notification) {
   const getNotificationIcon = () => {
     switch (type) {
       case "like":
@@ -100,16 +116,25 @@ function Notification({
  * Notifications page component
  */
 export default function Notifications() {
-  const notifications = getNotifications()
+  // Mock data - replace with actual data in the future
+  const notifications: Notification[] = []
 
   return (
     <div className="flex min-h-dvh flex-col">
       <PageHeader title="通知" />
 
       <div className="divide-border divide-y">
-        {notifications.map((notification) => (
-          <Notification key={notification.id} {...notification} />
-        ))}
+        {notifications.length > 0 ? (
+          notifications.map((notification) => (
+            <Notification key={notification.id} {...notification} />
+          ))
+        ) : (
+          <div className="text-muted-foreground flex flex-col items-center justify-center py-12">
+            <span className="mb-4 text-4xl">🔔</span>
+            <h3 className="mb-2 text-lg font-medium">尚無通知</h3>
+            <p className="text-center">當有新的互動時，通知會顯示在這裡。</p>
+          </div>
+        )}
       </div>
     </div>
   )
