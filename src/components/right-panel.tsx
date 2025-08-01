@@ -93,7 +93,17 @@ export function RightPanel() {
               廣告資訊
             </a>
           </div> */}
-          <p>&copy; 2025 吐司的森林小屋管理組</p>
+          <p>
+            &copy; 2025 吐司的森林小屋管理組 |{" "}
+            <a
+              href="https://github.com/toasti-birthday-anniversary/toasti-birthday-anniversary.github.io/blob/master/LICENSE"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              查看授權
+            </a>
+          </p>
         </div>
       </div>
     </div>
