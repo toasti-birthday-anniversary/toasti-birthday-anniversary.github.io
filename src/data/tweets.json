@@ -751,7 +751,7 @@
         "username": "星月",
         "avatar": "/img/43/avatar.png"
       },
-      "content": "嗨\n我是本次企劃負責做出這個頁面的なるこ\n本頁面是使用google form收集訊息後透過google sheet抓取資料來渲染的\n底層是next.js\n本次頁面是由popapo向我委託的\n本次頁面源代碼在github.com/toasti-birthday-anniversary/toasti-birthday-anniversary.github.io歡迎拿去玩~~\n祝妳生日快樂\nお誕生日おめでとうと！",
+      "content": "嗨\n我是本次企劃負責做出這個頁面的なるこ\n本頁面是使用google form收集訊息後透過google sheet抓取資料來渲染的\n底層是next.js\n本次頁面是由popapo向我委託的\n本次頁面源代碼在https://github.com/toasti-birthday-anniversary/toasti-birthday-anniversary.github.io歡迎拿去玩~~\n祝妳生日快樂\nお誕生日おめでとうと！",
       "timestamp": "2025/8/1 上午 1:41:05",
       "likes": 100,
       "retweets": 48,
